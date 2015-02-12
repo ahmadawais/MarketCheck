@@ -43,6 +43,7 @@ load_plugin_textdomain( 'a10e_av', false, dirname( plugin_basename( __FILE__ ) )
 require_once( 'vendor/autoload.php' );
 
 new Settings\Envato();
+new Settings\Mojo();
 new Settings( new Settings\Fields );
 
 /**
