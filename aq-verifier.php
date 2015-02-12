@@ -42,6 +42,7 @@ load_plugin_textdomain( 'a10e_av', false, dirname( plugin_basename( __FILE__ ) )
 
 require_once( 'vendor/autoload.php' );
 
+new Settings\Envato();
 new Settings( new Settings\Fields );
 
 /**
@@ -80,8 +81,9 @@ if(!class_exists('AQ_Verifier')) {
 		}
 
 		function plugin_info() {
+			// $file = dirname(__FILE__) . '/aq-verifier.php';
+			$file = __FILE__;
 
-			$file = dirname(__FILE__) . '/aq-verifier.php';
 			$this->plugin_url = plugin_dir_url($file);
 			$this->plugin_path = plugin_dir_path($file);
 
@@ -399,6 +401,7 @@ if(!class_exists('AQ_Verifier')) {
 	}
 
 }
-
-$aq_verifier = new AQ_Verifier;
-$aq_verifier->init();
+//
+// $aq_verifier = new AQ_Verifier;
+// $aq_verifier->init();
+//

@@ -5,6 +5,44 @@ namespace aqVerifier\Settings;
 class Fields {
 	function __construct() {}
 
+	/**
+	 * Wrapper to easily create a settings field
+	 *
+	 * @method add_text_input
+	 *
+	 * @param  array         $args
+	 */
+	public function add_text_input( $args ){
+		// sample array:
+		// array(
+		// 	"id"         => 'marketplace_username',
+		// 	"title"      => 'Envato Market Username',
+		// 	"section_id" => $this->get_section_id( $slug ),
+		// 	"slug"       => $slug,
+		// 	"settings"   => $settings,
+		// 	"desc"       => __('Case sensitive', 'a10e_av'),
+		// );
+
+		add_settings_field(
+			$args['id'],
+			$args['title'],
+			array( $this, 'input' ),
+			$args['slug'],
+			$args['section_id'],
+			array(
+				'id' 	=> $args['id'],
+				'slug' => $args['slug'],
+				'desc' 	=> !empty( $args['desc'] ) ? $args['desc'] : null,
+				"settings" => $args['settings']
+			)
+		);
+	}
+
+
+	public function add_section( $title, $id, $slug ){
+		add_settings_section( $id, $title, '__return_false', $slug );
+	}
+
 
 	/**
 	 * Normalize field values
@@ -19,7 +57,7 @@ class Fields {
 		$id = $args['id'];
 
 		$args['type']    = !empty( $args['type'] ) ? $args['type'] : 'text';
-		$args['value']   = $args['options'][$id];
+		$args['value']   = $args['settings'][$id];
 
 		if( !empty( $args['default'] ) && is_null( $args['value'] ) ){
 			$args['value'] = $args['default'];

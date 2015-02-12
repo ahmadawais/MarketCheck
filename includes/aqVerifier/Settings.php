@@ -18,40 +18,13 @@ class Settings {
 			array( $this, 'form' )
 		);
 
-		$this->options = get_option( $this->slug );
+		$this->settings = get_option( $this->slug );
 
 		register_setting( $this->slug, $this->slug, array( $this, 'sanitize_settings' ) );
 
-		add_settings_section( $this->slug, '', '__return_false', $this->slug );
+		do_action( 'aq-verifier/settings-fields', $this->slug, $this->fields, $this->settings );
 
-		add_settings_field(
-			'marketplace_username',
-			'Envato Market Username',
-			array( $this->fields, 'input' ),
-			$this->slug,
-			$this->slug,
-			array(
-				'id' 	=> 'marketplace_username',
-				'desc' 	=> __('Case sensitive', 'a10e_av'),
-				'slug' => $this->slug,
-				'options' => $this->options
-			)
-		);
-
-		add_settings_field(
-			'api_key',
-			'Envato API Key',
-			array( $this->fields, 'input' ),
-			$this->slug,
-			$this->slug,
-			array(
-				'id' 	=> 'api_key',
-				'desc' 	=> __( 'More info about ', 'a10e' ) . '<a href="http://themeforest.net/help/api" target="_blank">Envato API</a>',
-				'slug' => $this->slug,
-				'options' => $this->options
-			)
-		);
-
+		add_settings_section( $this->slug, 'General Settings', '__return_false', $this->slug );
 		add_settings_field(
 			'custom_style',
 			'Custom Styling',
@@ -63,7 +36,7 @@ class Settings {
 				'desc' 	=> __( 'Add custom inline styling to the registration page', 'a10e_av' ),
 				'default' => "#login {width: 500px} .success {background-color: #F0FFF8; border: 1px solid #CEEFE1;",
 				'slug' => $this->slug,
-				'options' => $this->options
+				'settings' => $this->settings
 			)
 		);
 
@@ -77,7 +50,7 @@ class Settings {
 				'id' 	=> 'disable_username',
 				'desc' 	=> __( 'Disable the username field and use only the purchase code', 'a10e_av' ),
 				'slug' => $this->slug,
-				'options' => $this->options
+				'settings' => $this->settings
 			)
 		);
 
@@ -91,7 +64,7 @@ class Settings {
 				'id' 	=> 'display_credit',
 				'desc' 	=> __( 'Display small credit line to help others find the plugin', 'a10e_av' ),
 				'slug' => $this->slug,
-				'options' => $this->options
+				'settings' => $this->settings
 			)
 		);
 	}
@@ -107,7 +80,6 @@ class Settings {
 	 * @since 	1.0
 	 */
 	function sanitize_settings( $fields ) {
-
 		foreach( $fields as $field => $value ){
 			$fields[ $field ] = trim( $value  );
 		}
