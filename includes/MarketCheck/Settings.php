@@ -42,11 +42,10 @@ class Settings {
 	{
 		register_setting( $this->opts['namespace'], $this->opts['namespace'] );
 
+		do_action( 'market_check/settings-fields',
+			$this->opts['namespace'], $this->fields, $this->getSettings() );
+
 		$this->fields->addSection( 'General Settings', 'general_settings', $this->opts['namespace'] );
-
-    do_action( 'market_check/settings-fields',
-    	$this->opts['namespace'], $this->fields, $this->getSettings() );
-
 
 		$this->fields->addTextarea( array(
 			"id"         => 'custom_style',
@@ -55,7 +54,7 @@ class Settings {
 			"namespace"  => $this->opts['namespace'],
 			"settings"   => $this->getSettings(),
 			"desc"       => __( 'Custom CSS to be used on Register form', 'a10e_av' ),
-	    'default'    => "#login {width: 500px} .success {background-color: #F0FFF8; border: 1px solid #CEEFE1;}",
+			'default'    => "#login {width: 500px} .success {background-color: #F0FFF8; border: 1px solid #CEEFE1;}",
 		) );
 
 

@@ -22,20 +22,25 @@ load_plugin_textdomain( 'a10e_av', false, dirname( plugin_basename( __FILE__ ) )
 require_once( 'vendor/autoload.php' );
 
 class MarketCheck {
-	protected $settings;
-	protected $options;
-	protected $fields;
-
 	function __construct()
 	{
-		$this->fields = new Settings\Fields;
-		$this->settings = new Settings( $this->fields );
-		$this->options = $this->settings->getSettings();
+		$fields = new Settings\Fields;
+		$settings = new Settings( $fields );
+		$db = null;
+
+		do_action( "marketcheck/register-market", $fields, $settings, $db );
 
 		// new Settings\Envato();
 		// new Settings\Mojo();
 		// new Markets\Envato;
 	}
 }
+
+
+
+add_action( 'marketcheck/register-market', function( $fields, $settings, $db ){
+	new Markets\Envato\Settings();
+}, 10, 3 );
+
 
 new MarketCheck;

@@ -8,7 +8,7 @@ class Fields {
 
 	public function addTextInput( $args )
 	{
-		$this->addField( 'text', $args );
+		$this->addField( 'input', $args );
 	}
 
 
@@ -43,8 +43,9 @@ class Fields {
 
 		$id = $args['id'];
 
-		$args['type']  = !empty( $args['type'] ) ? $args['type'] : 'text';
-		$args['value'] = !empty( $args['settings'][$id] ) ? $args['settings'][$id] : null;
+		$args['type']  = !empty( $args['type'] ) ? $args['type'] : 'input';
+
+		$args['value'] = !empty( $args['settings'][$id] ) ? $args['settings'][$id] : false;
 
 		if( !empty( $args['default'] ) && is_null( $args['value'] ) ){
 			$args['value'] = $args['default'];

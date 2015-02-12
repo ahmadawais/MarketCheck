@@ -2,8 +2,11 @@
 
 namespace MarketCheck\Settings;
 
-interface MarketSettings {
-	public function add_fields( $slug, $fields, $options );
+abstract class MarketSettings {
+	function __construct()
+	{
+		add_action( 'market_check/settings-fields', array( $this, 'addFields' ), 10, 3 );
+	}
 
-	public function get_section_id( $slug );
+	abstract public function addFields( $namespace, $fields, $settings );
 }
