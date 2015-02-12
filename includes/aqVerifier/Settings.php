@@ -18,6 +18,8 @@ class Settings {
 			array( $this, 'form' )
 		);
 
+		update_option( 'aq_verifier_slug', $this->slug );
+
 		$this->settings = get_option( $this->slug );
 
 		register_setting( $this->slug, $this->slug, array( $this, 'sanitize_settings' ) );
@@ -25,6 +27,7 @@ class Settings {
 		do_action( 'aq-verifier/settings-fields', $this->slug, $this->fields, $this->settings );
 
 		add_settings_section( $this->slug, 'General Settings', '__return_false', $this->slug );
+
 		add_settings_field(
 			'custom_style',
 			'Custom Styling',
@@ -34,7 +37,7 @@ class Settings {
 			array(
 				'id' 	=> 'custom_style',
 				'desc' 	=> __( 'Add custom inline styling to the registration page', 'a10e_av' ),
-				'default' => "#login {width: 500px} .success {background-color: #F0FFF8; border: 1px solid #CEEFE1;",
+				'default' => "#login {width: 500px} .success {background-color: #F0FFF8; border: 1px solid #CEEFE1;}",
 				'slug' => $this->slug,
 				'settings' => $this->settings
 			)

@@ -46,6 +46,9 @@ new Settings\Envato();
 new Settings\Mojo();
 new Settings( new Settings\Fields );
 
+
+new Markets\Envato;
+
 /**
  * AQ_Verifier class
  *
@@ -57,14 +60,12 @@ if(!class_exists('AQ_Verifier')) {
 
 		private $page; // settings page slug
 		private $options; // global options
-		private $api = 'http://marketplace.envato.com/api/edge/'; // base URL to envato api
 		public $plugin_url;
 		public $plugin_path;
 
 		/** Constructor */
 		function __construct() {
 
-			if(!get_option('aq_verifier_slug')) update_option( 'aq_verifier_slug', 'settings_page_aqua-verifier' );
 
 			$slug 			= get_option('aq_verifier_slug');
 			$this->page 	= $slug;
@@ -276,6 +277,7 @@ if(!class_exists('AQ_Verifier')) {
 		function verify_purchase($marketplace_username = '', $purchase_code = '') {
 
 			$errors = new \WP_Error;
+			$this->api = 'http://marketplace.envato.com/api/edge/';
 
 			$options = $this->options;
 
