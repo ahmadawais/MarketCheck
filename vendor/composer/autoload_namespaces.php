@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'aqVerifier\\' => array($baseDir . '/includes'),
+    'MarketCheck\\' => array($baseDir . '/includes'),
 );

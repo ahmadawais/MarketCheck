@@ -1,6 +1,6 @@
 <?php
 
-namespace aqVerifier\Settings;
+namespace MarketCheck\Settings;
 
 interface MarketSettings {
 	public function add_fields( $slug, $fields, $options );
