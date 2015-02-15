@@ -5,9 +5,7 @@ namespace MarketCheck\Markets\Envato;
 class Settings extends \MarketCheck\Settings\MarketSettings {
 	public function addFields( $namespace, $fields, $settings )
 	{
-		// $fields->addSection( 'Envato Market', $this->getSectionID( $namespace ), $namespace );
 		$fields->addSection( 'Envato Market', 'envato_settings', $namespace );
-
 
 		$fields->addTextInput( array(
 			"id"         => 'envato_user',

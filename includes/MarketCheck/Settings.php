@@ -47,17 +47,6 @@ class Settings {
 
 		$this->fields->addSection( 'General Settings', 'general_settings', $this->opts['namespace'] );
 
-		$this->fields->addTextarea( array(
-			"id"         => 'custom_style',
-			"title"      => __( 'Custom Styling', 'a10e_av' ),
-			"section_id" => 'general_settings',
-			"namespace"  => $this->opts['namespace'],
-			"settings"   => $this->getSettings(),
-			"desc"       => __( 'Custom CSS to be used on Register form', 'a10e_av' ),
-			'default'    => "#login {width: 500px} .success {background-color: #F0FFF8; border: 1px solid #CEEFE1;}",
-		) );
-
-
 		$this->fields->addCheckbox( array(
 			"id"         => 'disable_username',
 			"title"      => __( 'Disable Username input', 'a10e_av' ),
