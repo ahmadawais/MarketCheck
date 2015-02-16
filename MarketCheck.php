@@ -2,7 +2,7 @@
 /*
 Plugin Name: MarketCheck
 Description: An extensible plugin to check if an user has bought an item from various marketplaces
-Version: 0.0.1
+Version: 1.0.0
 Author: Ionuț Staicu
 Author URI: http://ionutstaicu.com/
 License: GPL
