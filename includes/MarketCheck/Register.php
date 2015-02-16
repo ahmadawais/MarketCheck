@@ -31,21 +31,27 @@ class Register {
 
 		if( $isSubmited ){
 			if( !$selectedMarket ){
-				$errors->add('invalid-market', '<strong>Error</strong>: Empty Purchase Code');
+				$errors->add( 'invalid-market', __( '<strong>Error</strong>: Invalid Market Selected.', 'a10e_av' ) );
 			}
 
 			if( !$purchaseKey ){
-				$errors->add('empty-purchase', '<strong>Error</strong>: Empty Purchase Code');
+				$errors->add( 'empty-purchase', __( '<strong>Error</strong>: Empty Purchase Code.', 'a10e_av' ) );
 			}
 		}
 
 	 	if( $isSubmited && $selectedMarket && $purchaseKey ) {
 			$this->markets[ $selectedMarket ]->setPurchaseKey( $purchaseKey );
-			$this->markets[ $selectedMarket ]->addPurchase();
+			$isValidPurchase = $this->markets[ $selectedMarket ]->isValidPurchase();
+			if( is_wp_error( $isValidPurchase ) ){
+				// $errors = $isValidPurchase;
+			} else {
+				return;
+			}
 		}
 
+
 		if( $isSubmited && true ){
-			return;
+			// return;
 		}
 
 		login_header( $title, '<p class="message register">' . $title, $errors );
@@ -57,19 +63,17 @@ class Register {
 
 	public function registerForm()
 	{
-		$purchaseKey = $this->getPurchaseKey();
 		$this->showMarketSelector();
 		?>
-
-		<input type="text" name="market-purchase-key" value="<?php echo $purchaseKey ?>" />
+		<input type="hidden" name="market-purchase-key" value="<?php echo $this->getPurchaseKey(); ?>" />
 		<?php
 	}
 
 
 	public function errors( $errors, $userLogin, $userEmail )
 	{
-		if( empty( $_POST['market-purchase-key'] ) ){
-			$errors->add( 'invalid_purchase_key', __( '<strong>ERROR</strong>: Invalid Purchase Key!', 'a10e_av' ) );
+		if( !$this->getPurchaseKey() ){
+			$errors->add( 'invalid_purchase_key', __( '<strong>ERROR</strong>: Invalid Purchase Key.', 'a10e_av' ) );
 		}
 
 		return $errors;
@@ -125,7 +129,7 @@ class Register {
 		$selectMarketplaceText = __( 'Select Marketplace', 'a10e_av' );
 		if( count( $this->markets ) < 2 ){
 			?>
-				<input type="hidden" name="market-selector" value="<?php echo key( $this->markets ) ?>" />
+				<input type="hidden" name="market-selector" value="<?php echo esc_attr( key( $this->markets ) ); ?>" />
 			<?php
 		} else {
 			?>
@@ -135,7 +139,8 @@ class Register {
 				<?php
 					printf( '<option value="">%s</option>', $selectMarketplaceText );
 					foreach ( $this->markets as $marketName => $market ) {
-						printf( '<option value="%1$s" %2$s>%1$s</option>',
+						printf( '<option value="%1$s" %3$s>%2$s</option>',
+							esc_attr( $marketName ),
 							$marketName,
 							selected( $marketName, $selectedMarket, 1 )
 						);

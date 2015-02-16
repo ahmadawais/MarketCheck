@@ -39,22 +39,28 @@ abstract class QueryMarket {
 	}
 
 
-	public function addPurchase()
+	public function isValidPurchase()
 	{
 		$parsedPurchase = $this->parsePurchase( $this->retreiveApi() );
+		$errors = new \WP_Error;
 
-		if( !!$parsedPurchase && $this->isUniqueLicense() ){
-
+		if( !$parsedPurchase ){
+			$errors->add( 'invalid-purchase-key', __( '<strong>Error</strong>: Invalid Purchase Key.', 'a10e_av' ) );
+			return $errors;
 		}
 
-		echo '<pre style="font-size:18px">'; print_r( $parsedPurchase ); echo '</pre>'; die();
-		die();
+		if( $this->isUniqueLicense() ){
+			return true;
+		} else {
+			$errors->add( 'invalid-purchase-key', __( '<strong>Error</strong>: License is already used by another user.', 'a10e_av') );
+			return $errors;
+		}
 	}
 
 
 	protected function isUniqueLicense()
 	{
-
+		return true;
 	}
 
 
@@ -89,8 +95,4 @@ abstract class QueryMarket {
 	 * @return mixed         array of normalized items or null if fails
 	 */
 	abstract public function parsePurchase( $response );
-
-
-
-	 // abstract public function addPurchase();
 }
