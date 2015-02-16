@@ -4,6 +4,7 @@ namespace MarketCheck;
 
 class Register {
 	protected $markets = array();
+	protected $currentMarket = null;
 
 	function __construct()
 	{
@@ -17,6 +18,17 @@ class Register {
 	public function addMarket( $name, Markets\QueryMarket $market )
 	{
 		$this->markets[ $name ] = $market;
+	}
+
+
+	protected function getCurrentMarket()
+	{
+		$selectedMarket = $this->getSelectedMarket();
+		if( !$this->currentMarket && $selectedMarket ){
+			$this->currentMarket = $this->markets[ $selectedMarket ];
+		}
+
+		return $this->currentMarket;
 	}
 
 
@@ -40,8 +52,8 @@ class Register {
 		}
 
 	 	if( $isSubmited && $selectedMarket && $purchaseKey ) {
-			$this->markets[ $selectedMarket ]->setPurchaseKey( $purchaseKey );
-			$isValidPurchase = $this->markets[ $selectedMarket ]->isValidPurchase();
+			$this->getCurrentMarket()->setPurchaseKey( $purchaseKey );
+			$isValidPurchase = $this->getCurrentMarket()->isValidPurchase();
 			if( is_wp_error( $isValidPurchase ) ){
 				$errors = $isValidPurchase;
 			} else {
@@ -85,9 +97,8 @@ class Register {
 	public function register( $userID )
 	{
 		$purchaseKey    = $this->getPurchaseKey();
-		$selectedMarket = $this->getSelectedMarket();
-		$this->markets[ $selectedMarket ]->setPurchaseKey( $purchaseKey );
-		$this->markets[ $selectedMarket ]->addUser( $userID );
+		$this->getCurrentMarket()->setPurchaseKey( $purchaseKey );
+		$this->getCurrentMarket()->addUser( $userID );
 	}
 
 
@@ -105,7 +116,13 @@ class Register {
 		<form name="registerform" id="registerform" method="post">
 			<p>
 				<label for="purchase-key"><?php _e( 'Purchase Key', 'a10e_av' ) ?><br />
-					<input type="text" name="purchase-key" id="purchase-key" class="input" value="<?php echo $this->getPurchaseKey() ?>" size="20" tabindex="10" /></label>
+					<input type="text"
+						name="purchase-key"
+						id="purchase-key"
+						class="input"
+						value="<?php echo $this->getPurchaseKey() ?>"
+						size="20"
+						tabindex="10" />
 				</label>
 				<input type="hidden" name="marketcheck-submitted" value="1" />
 			</p>
@@ -133,14 +150,18 @@ class Register {
 	{
 		$selectedMarket = $this->getSelectedMarket();
 		$selectMarketplaceText = __( 'Select Marketplace', 'a10e_av' );
+		$help = array();
+
 		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 && $selectedMarket ){
 			?>
 				<input type="hidden" name="market-selector" value="<?php echo $selectedMarket; ?>" />
 			<?php
 		} else if( count( $this->markets ) < 2 ){
+			$market = key( $this->markets );
 			?>
-				<input type="hidden" name="market-selector" value="<?php echo esc_attr( key( $this->markets ) ); ?>" />
+				<input type="hidden" name="market-selector" value="<?php echo esc_attr( $market ); ?>" />
 			<?php
+				$help[] = $this->markets[ $market ]->getHelp();
 		} else {
 			?>
 			<p>
@@ -149,6 +170,7 @@ class Register {
 				<?php
 					printf( '<option value="">%s</option>', $selectMarketplaceText );
 					foreach ( $this->markets as $marketName => $market ) {
+						$help[] = '<p> ' . $market->getHelp();
 						printf( '<option value="%1$s" %3$s>%2$s</option>',
 							esc_attr( $marketName ),
 							$marketName,
@@ -159,6 +181,8 @@ class Register {
 				</select>
 			<?php
 		}
+		echo implode( ' ', $help );
+		echo "<br>";
 	}
 
 

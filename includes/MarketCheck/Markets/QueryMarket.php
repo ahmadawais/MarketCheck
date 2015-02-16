@@ -91,6 +91,18 @@ abstract class QueryMarket {
 				'%s'
 			)
 		);
+
+		wp_update_user( array (
+			'ID'   => $userID,
+			'role' => 'participant'
+		) ) ;
+
+		$items = array( $product['id'] );
+
+		// add a hook to allow adding extra user meta (or whatever)
+		do_action( 'market_check/registered-user', $userID, $product );
+
+		update_user_meta( $userID, 'marketcheck_purchased_items', $items );
 	}
 
 
@@ -131,4 +143,14 @@ abstract class QueryMarket {
 	 * @return mixed         array of normalized items or null if fails
 	 */
 	abstract public function parsePurchase( $response );
+
+
+	/**
+	 * Get a help text to be displayed on the register form field
+	 *
+	 * @method getHelp
+	 *
+	 * @return string  the help text
+	 */
+	abstract public function getHelp();
 }

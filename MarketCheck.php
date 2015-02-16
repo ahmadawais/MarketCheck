@@ -42,7 +42,7 @@ class MarketCheck {
 		$setup->install();
 		if( $currentDB != MARKETCHECK_DB_VERSION ){
 			register_activation_hook( __FILE__, array( $setup, 'install' ) );
-			// update_option( "marketcheck_version", MARKETCHECK_DB_VERSION );
+			update_option( "marketcheck_version", MARKETCHECK_DB_VERSION );
 		}
 
 		do_action( "marketcheck/register-market", $fields, $settings->getSettings(), $registerForm );

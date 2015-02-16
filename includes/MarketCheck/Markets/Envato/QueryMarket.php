@@ -32,4 +32,10 @@ class QueryMarket extends \MarketCheck\Markets\QueryMarket {
 
 		return null;
 	}
+
+
+	public function getHelp()
+	{
+		return 'You can find your item purchase code in your Envato user account » Downloads section';
+	}
 }
