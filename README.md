@@ -29,11 +29,10 @@ In order to add a new market, you need to follow three simple..ish steps:
 3. Register the new market (inside of `register-custom-markets.php` file):
 
 ```
-add_action( 'marketcheck/register-market', function( $fields, $settings, $registerForm ){
-	new \MarketCheck\Markets\Envato\Settings();
-	$envato = new \MarketCheck\Markets\Envato\QueryMarket( $settings );
-	$registerForm->addMarket( "Envato", $envato );
-}, 10, 3 );
+add_action( 'marketcheck/register-market', function( $fields, $settings, $registerForm, $db ){
+	new Envato\Settings();
+	$registerForm->addMarket( new Envato\QueryMarket( $settings, $db ) );
+}, 10, 4 );
 
 ```
 

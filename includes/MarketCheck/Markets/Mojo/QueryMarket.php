@@ -18,7 +18,6 @@ class QueryMarket extends \MarketCheck\Markets\QueryMarket {
 
 	public function parsePurchase( $response )
 	{
-
 		if( isset( $response['verify-purchase']['item_id'] ) ){
 			$parsedResponse = $response['verify-purchase'];
 
@@ -26,7 +25,8 @@ class QueryMarket extends \MarketCheck\Markets\QueryMarket {
 				'id'           => $parsedResponse['item_id'],
 				'name'         => $parsedResponse['name'],
 				'purchased_at' => $parsedResponse['purchase_date'],
-				'order_id'     => $this->purchaseKey
+				'order_id'     => $this->purchaseKey,
+				'market_name'  => $this->getMarketName()
 			);
 		}
 
@@ -37,5 +37,11 @@ class QueryMarket extends \MarketCheck\Markets\QueryMarket {
 	public function getHelp()
 	{
 		return 'You can find your item purchase code in your Mojo Marketplace user account » Downloads section';
+	}
+
+
+	public function getMarketName()
+	{
+		return "Mojo Marketplace";
 	}
 }

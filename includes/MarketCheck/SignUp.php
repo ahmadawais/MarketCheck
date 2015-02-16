@@ -2,12 +2,16 @@
 
 namespace MarketCheck;
 
-class Register {
+class SignUp {
 	protected $markets = array();
 	protected $currentMarket = null;
+	protected $userManagement = null;
 
-	function __construct()
+	function __construct( $userManagement )
 	{
+
+		$this->userManagement = $userManagement;
+
 		add_action( 'login_form_register', array( $this, 'checkPurchaseForm' ) );
 		add_action( 'register_form', array( $this, 'registerForm' ) );
 		add_filter( 'registration_errors', array( $this, 'errors' ), 10, 3 );
@@ -15,8 +19,9 @@ class Register {
 	}
 
 
-	public function addMarket( $name, Markets\QueryMarket $market )
+	public function addMarket( Markets\QueryMarket $market )
 	{
+		$name = $market->getMarketName();
 		$this->markets[ $name ] = $market;
 	}
 
@@ -73,6 +78,7 @@ class Register {
 		$this->showMarketSelector();
 		?>
 		<input type="hidden" name="purchase-key" value="<?php echo $this->getPurchaseKey(); ?>" />
+		<input type="hidden" name="market-selector" value="<?php echo $this->getSelectedMarket(); ?>" />
 		<input type="hidden" name="marketcheck-submitted" value="2" />
 		<?php
 	}
@@ -96,9 +102,8 @@ class Register {
 
 	public function register( $userID )
 	{
-		$purchaseKey    = $this->getPurchaseKey();
-		$this->getCurrentMarket()->setPurchaseKey( $purchaseKey );
-		$this->getCurrentMarket()->addUser( $userID );
+		$this->getCurrentMarket()->setPurchaseKey( $this->getPurchaseKey() );
+		$this->userManagement->addUser( $userID, $this->getCurrentMarket()->getProduct() );
 	}
 
 

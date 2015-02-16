@@ -7,9 +7,10 @@ abstract class QueryMarket {
 	protected $purchaseKey;
 	protected $db;
 
-	function __construct( $settings )
+	function __construct( $settings, $db )
 	{
 		$this->settings = $settings;
+		$this->db = $db;
 	}
 
 
@@ -17,7 +18,6 @@ abstract class QueryMarket {
 	{
 		$this->purchaseKey = $purchaseKey;
 	}
-
 
 
 	protected function retreiveApi()
@@ -36,6 +36,12 @@ abstract class QueryMarket {
 		}
 
 		return json_decode( $body, true );
+	}
+
+
+	public function getProduct()
+	{
+	  return $this->parsePurchase( $this->retreiveApi() );
 	}
 
 
@@ -60,66 +66,11 @@ abstract class QueryMarket {
 
 	protected function isUniqueLicense()
 	{
-		$wpdb   = $this->db();
-		$dbName = $this->getDbName();
+		$wpdb   = $this->db->wpdb();
+		$dbName = $this->db->getDbName();
 		$count  = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$dbName} WHERE order_id = %s", $this->purchaseKey ) );
 
 		return $count == 0;
-	}
-
-
-	public function addUser( $userID )
-	{
-		$product = $this->parsePurchase( $this->retreiveApi() );
-
-		$wpdb = $this->db();
-
-		$wpdb->insert(
-			$this->getDbName(),
-			array(
-				'order_id'     => $product['order_id'],
-				'item_id'      => $product['id'],
-				'user_id'      => $userID,
-				'purchased_at' => date('Y-m-d H:i:s', strtotime( $product['purchased_at'] ) ),
-				'product_name' => $product['name']
-			),
-			array(
-				'%s',
-				'%s',
-				'%d',
-				'%s',
-				'%s'
-			)
-		);
-
-		wp_update_user( array (
-			'ID'   => $userID,
-			'role' => 'participant'
-		) ) ;
-
-		$items = array( $product['id'] );
-
-		// add a hook to allow adding extra user meta (or whatever)
-		do_action( 'market_check/registered-user', $userID, $product );
-
-		update_user_meta( $userID, 'marketcheck_purchased_items', $items );
-	}
-
-
-	public function db()
-	{
-		if( !$this->db ){
-		  global $wpdb;
-		  $this->db = $wpdb;
-		}
-
-		return $this->db;
-	}
-
-
-	protected function getDbName()
-	{
-		return $this->db()->prefix . MARKETCHECK_DBNAME;
 	}
 
 
@@ -153,4 +104,14 @@ abstract class QueryMarket {
 	 * @return string  the help text
 	 */
 	abstract public function getHelp();
+
+
+	/**
+	 * Get market name
+	 *
+	 * @method getMarketName
+	 *
+	 * @return string
+	 */
+	abstract public function getMarketName();
 }
