@@ -152,7 +152,7 @@ class Register {
 		$selectMarketplaceText = __( 'Select Marketplace', 'marketcheck' );
 		$help = array();
 
-		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 && $selectedMarket ){
+		if( $this->getPostVar( 'marketcheck-submitted' ) && $selectedMarket ){
 			?>
 				<input type="hidden" name="market-selector" value="<?php echo $selectedMarket; ?>" />
 			<?php

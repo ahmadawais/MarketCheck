@@ -21,7 +21,7 @@ load_plugin_textdomain( 'marketcheck', false, dirname( plugin_basename( __FILE__
 
 require_once( 'vendor/autoload.php' );
 
-define( 'MARKETCHECK_DB_VERSION', '0.0.1' );
+define( 'MARKETCHECK_DB_VERSION', '0.0.3' );
 
 define( 'MARKETCHECK_BASEFILE', __FILE__ );
 define( 'MARKETCHECK_PATH', plugin_dir_url( __FILE__ ) );
@@ -44,6 +44,8 @@ class MarketCheck {
 			register_activation_hook( __FILE__, array( $setup, 'install' ) );
 			update_option( "marketcheck_version", MARKETCHECK_DB_VERSION );
 		}
+
+
 
 		do_action( "marketcheck/register-market", $fields, $settings->getSettings(), $registerForm );
 	}
