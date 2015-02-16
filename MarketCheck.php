@@ -50,13 +50,9 @@ class MarketCheck {
 }
 
 
-
 add_action( 'marketcheck/register-market', function( $fields, $settings, $registerForm ){
 	new Markets\Envato\Settings();
 	$envato = new Markets\Envato\QueryMarket( $settings );
-
-	$envato->setPurchaseKey( 'cc8c16ae-910b-4e0e-a722-fa0f2aea35fa' );
-
 	$registerForm->addMarket( "Envato", $envato );
 }, 10, 3 );
 

@@ -43,15 +43,10 @@ class Register {
 			$this->markets[ $selectedMarket ]->setPurchaseKey( $purchaseKey );
 			$isValidPurchase = $this->markets[ $selectedMarket ]->isValidPurchase();
 			if( is_wp_error( $isValidPurchase ) ){
-				// $errors = $isValidPurchase;
+				$errors = $isValidPurchase;
 			} else {
 				return;
 			}
-		}
-
-
-		if( $isSubmited && true ){
-			// return;
 		}
 
 		login_header( $title, '<p class="message register">' . $title, $errors );
@@ -65,7 +60,8 @@ class Register {
 	{
 		$this->showMarketSelector();
 		?>
-		<input type="hidden" name="market-purchase-key" value="<?php echo $this->getPurchaseKey(); ?>" />
+		<input type="hidden" name="purchase-key" value="<?php echo $this->getPurchaseKey(); ?>" />
+		<input type="hidden" name="marketcheck-submitted" value="2" />
 		<?php
 	}
 
@@ -74,6 +70,12 @@ class Register {
 	{
 		if( !$this->getPurchaseKey() ){
 			$errors->add( 'invalid_purchase_key', __( '<strong>ERROR</strong>: Invalid Purchase Key.', 'a10e_av' ) );
+		}
+
+		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 ){
+			$errors->remove('empty_username');
+			$errors->remove('empty_email');
+			$errors->add('foo', __( 'Please the register form', 'a10e_av' ) );
 		}
 
 		return $errors;
@@ -100,8 +102,9 @@ class Register {
 		<form name="registerform" id="registerform" method="post">
 			<p>
 				<label for="purchase-key"><?php _e( 'Purchase Key', 'a10e_av' ) ?><br />
-				<input type="text" name="purchase-key" id="purchase-key" class="input" value="" size="20" tabindex="10" /></label>
-				<input type="hidden" name="marketcheck-submitted" value="1" /></label>
+					<input type="text" name="purchase-key" id="purchase-key" class="input" value="<?php echo $this->getPurchaseKey() ?>" size="20" tabindex="10" /></label>
+				</label>
+				<input type="hidden" name="marketcheck-submitted" value="1" />
 			</p>
 
 			<?php $this->showMarketSelector() ?>
@@ -127,7 +130,11 @@ class Register {
 	{
 		$selectedMarket = $this->getSelectedMarket();
 		$selectMarketplaceText = __( 'Select Marketplace', 'a10e_av' );
-		if( count( $this->markets ) < 2 ){
+		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 && $selectedMarket ){
+			?>
+				<input type="hidden" name="market-selector" value="<?php echo $selectedMarket; ?>" />
+			<?php
+		} else if( count( $this->markets ) < 2 ){
 			?>
 				<input type="hidden" name="market-selector" value="<?php echo esc_attr( key( $this->markets ) ); ?>" />
 			<?php
@@ -166,6 +173,6 @@ class Register {
 
 	protected function getPostVar( $varName )
 	{
-		return isset( $_POST[ $varName ] ) ? $_POST[ $varName ] : null;
+		return isset( $_POST[ $varName ] ) ? esc_attr( $_POST[ $varName ] ) : null;
 	}
 }
