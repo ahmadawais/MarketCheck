@@ -75,7 +75,7 @@ class Register {
 		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 ){
 			$errors->remove('empty_username');
 			$errors->remove('empty_email');
-			$errors->add('foo', __( 'Please the register form', 'a10e_av' ) );
+			$errors->add('foo', __( 'Please fill the register form', 'a10e_av' ) );
 		}
 
 		return $errors;
@@ -84,7 +84,10 @@ class Register {
 
 	public function register( $userID )
 	{
-
+		$purchaseKey    = $this->getPurchaseKey();
+		$selectedMarket = $this->getSelectedMarket();
+		$this->markets[ $selectedMarket ]->setPurchaseKey( $purchaseKey );
+		$this->markets[ $selectedMarket ]->addUser( $userID );
 	}
 
 
@@ -173,6 +176,6 @@ class Register {
 
 	protected function getPostVar( $varName )
 	{
-		return isset( $_POST[ $varName ] ) ? esc_attr( $_POST[ $varName ] ) : null;
+		return isset( $_POST[ $varName ] ) ? trim( esc_attr( $_POST[ $varName ] ) ) : null;
 	}
 }

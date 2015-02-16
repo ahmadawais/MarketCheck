@@ -22,7 +22,7 @@ class Settings extends \MarketCheck\Settings\MarketSettings {
 			"section_id" => 'envato_settings',
 			"namespace"  => $namespace,
 			"settings"   => $settings,
-			"desc"       => __( 'You can find this in your user account under <strong>API Keys</strong> menu entry.', 'a10e_av' )
+			"desc"       => __( 'You can find this in your Envato user account under <strong>API Keys</strong> menu entry.', 'a10e_av' )
 		) );
 	}
 }

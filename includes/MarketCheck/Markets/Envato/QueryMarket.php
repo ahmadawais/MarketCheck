@@ -23,10 +23,10 @@ class QueryMarket extends \MarketCheck\Markets\QueryMarket {
 			$parsedResponse = $response['verify-purchase'];
 
 			return array(
-				'id'       => $parsedResponse['item_id'],
-				'name'     => $parsedResponse['item_name'],
-				'date'     => $parsedResponse['created_at'],
-				'order_id' => $this->purchaseKey
+				'id'           => $parsedResponse['item_id'],
+				'name'         => $parsedResponse['item_name'],
+				'purchased_at' => $parsedResponse['created_at'],
+				'order_id'     => $this->purchaseKey
 			);
 		}
 

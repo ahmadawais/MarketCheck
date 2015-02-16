@@ -60,7 +60,37 @@ abstract class QueryMarket {
 
 	protected function isUniqueLicense()
 	{
-		return true;
+		$wpdb   = $this->db();
+		$dbName = $this->getDbName();
+		$count  = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$dbName} WHERE order_id = %s", $this->purchaseKey ) );
+
+		return $count == 0;
+	}
+
+
+	public function addUser( $userID )
+	{
+		$product = $this->parsePurchase( $this->retreiveApi() );
+
+		$wpdb = $this->db();
+
+		$wpdb->insert(
+			$this->getDbName(),
+			array(
+				'order_id'     => $product['order_id'],
+				'item_id'      => $product['id'],
+				'user_id'      => $userID,
+				'purchased_at' => date('Y-m-d H:i:s', strtotime( $product['purchased_at'] ) ),
+				'product_name' => $product['name']
+			),
+			array(
+				'%s',
+				'%s',
+				'%d',
+				'%s',
+				'%s'
+			)
+		);
 	}
 
 
@@ -72,6 +102,12 @@ abstract class QueryMarket {
 		}
 
 		return $this->db;
+	}
+
+
+	protected function getDbName()
+	{
+		return $this->db()->prefix . MARKETCHECK_DBNAME;
 	}
 
 

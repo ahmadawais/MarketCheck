@@ -21,7 +21,8 @@ class Setup {
 			order_id varchar(250) NOT NULL,
 			item_id varchar(250) NOT NULL,
 			user_id int(4) NOT NULL,
-			date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+			purchased_at datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+			created_at datetime DEFAULT CURRENT_TIMESTAMP NOT NULL,
 			product_name varchar(250) NOT NULL,
 			UNIQUE KEY id (id)
 		) {$charset_collate};";
