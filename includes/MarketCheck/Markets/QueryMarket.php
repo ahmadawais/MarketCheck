@@ -51,14 +51,14 @@ abstract class QueryMarket {
 		$errors = new \WP_Error;
 
 		if( !$parsedPurchase ){
-			$errors->add( 'invalid-purchase-key', __( '<strong>Error</strong>: Invalid Purchase Key.', 'marketcheck' ) );
+			$errors->add( 'invalid_purchase_key', __( '<strong>Error</strong>: Invalid Purchase Key.', 'marketcheck' ) );
 			return $errors;
 		}
 
 		if( $this->isUniqueLicense() ){
 			return true;
 		} else {
-			$errors->add( 'invalid-purchase-key', __( '<strong>Error</strong>: License is already used by another user.', 'marketcheck') );
+			$errors->add( 'purchase_key_already_used', __( '<strong>Error</strong>: License is already used by another user.', 'marketcheck') );
 			return $errors;
 		}
 	}

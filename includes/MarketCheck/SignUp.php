@@ -16,6 +16,20 @@ class SignUp {
 		add_action( 'register_form', array( $this, 'registerForm' ) );
 		add_filter( 'registration_errors', array( $this, 'errors' ), 10, 3 );
 		add_action( 'user_register', array( $this, 'register' ) );
+    add_filter( 'shake_error_codes', array( $this, 'shaker' ) );
+	}
+
+
+	function shaker( $shake_error_codes ) {
+	  $extras = array(
+	  	'invalid-market',
+	  	'empty_purchase',
+	  	'invalid_purchase_key',
+	  	'purchase_key_already_used'
+  	);
+
+	  $shake_error_codes = array_merge( $extras, $shake_error_codes );
+	  return $shake_error_codes;
 	}
 
 
@@ -52,7 +66,7 @@ class SignUp {
 			}
 
 			if( !$purchaseKey ){
-				$errors->add( 'empty-purchase', __( '<strong>Error</strong>: Empty Purchase Code.', 'marketcheck' ) );
+				$errors->add( 'empty_purchase', __( '<strong>Error</strong>: Empty Purchase Code.', 'marketcheck' ) );
 			}
 		}
 
@@ -93,7 +107,7 @@ class SignUp {
 		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 ){
 			$errors->remove('empty_username');
 			$errors->remove('empty_email');
-			$errors->add('foo', __( 'Please fill the register form', 'marketcheck' ) );
+			$errors->add('fill-register-form', __( 'Please fill the register form', 'marketcheck' ) );
 		}
 
 		return $errors;
