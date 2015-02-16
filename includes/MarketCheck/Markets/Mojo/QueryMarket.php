@@ -1,15 +1,15 @@
 <?php
 
-namespace MarketCheck\Markets\Envato;
+namespace MarketCheck\Markets\Mojo;
 
 class QueryMarket extends \MarketCheck\Markets\QueryMarket {
 	public function getApiURL()
 	{
 		$apiURL = array(
-			'http://marketplace.envato.com/api/edge',
-			$this->settings['envato_user'],
-			$this->settings['envato_api_key'],
-			'verify-purchase:' . $this->purchaseKey . '.json'
+			'http://www.mojomarketplace.com/api/v1',
+			$this->settings['mojo_user'],
+			$this->settings['mojo_api_key'],
+			'verify-purchase/' . $this->purchaseKey . '.json'
 		);
 
 		return implode( '/', $apiURL );
@@ -23,8 +23,8 @@ class QueryMarket extends \MarketCheck\Markets\QueryMarket {
 
 			return array(
 				'id'           => $parsedResponse['item_id'],
-				'name'         => $parsedResponse['item_name'],
-				'purchased_at' => $parsedResponse['created_at'],
+				'name'         => $parsedResponse['name'],
+				'purchased_at' => $parsedResponse['purchase_date'],
 				'order_id'     => $this->purchaseKey,
 				'market_name'  => $this->getMarketName()
 			);
@@ -36,12 +36,12 @@ class QueryMarket extends \MarketCheck\Markets\QueryMarket {
 
 	public function getHelp()
 	{
-		return 'You can find your item purchase code in your Envato user account » Downloads section';
+		return 'You can find your item purchase code in your Mojo Marketplace user account » Downloads section';
 	}
 
 
 	public function getMarketName()
 	{
-		return "Envato";
+		return "Mojo Marketplace";
 	}
 }

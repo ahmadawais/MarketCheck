@@ -42,7 +42,7 @@ class Settings {
 	{
 		register_setting( $this->opts['namespace'], $this->opts['namespace'] );
 
-		do_action( 'market_check/settings-fields',
+		do_action( 'marketcheck/settings-fields',
 			$this->opts['namespace'], $this->fields, $this->getSettings() );
 
 		$this->fields->addSection( 'General Settings', 'general_settings', $this->opts['namespace'] );

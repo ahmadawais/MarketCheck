@@ -2,21 +2,40 @@
 
 namespace MarketCheck;
 
-class Register {
+class SignUp {
 	protected $markets = array();
 	protected $currentMarket = null;
+	protected $userManagement = null;
 
-	function __construct()
+	function __construct( $userManagement )
 	{
+
+		$this->userManagement = $userManagement;
+
 		add_action( 'login_form_register', array( $this, 'checkPurchaseForm' ) );
 		add_action( 'register_form', array( $this, 'registerForm' ) );
 		add_filter( 'registration_errors', array( $this, 'errors' ), 10, 3 );
 		add_action( 'user_register', array( $this, 'register' ) );
+    add_filter( 'shake_error_codes', array( $this, 'shaker' ) );
 	}
 
 
-	public function addMarket( $name, Markets\QueryMarket $market )
+	function shaker( $shake_error_codes ) {
+	  $extras = array(
+	  	'invalid-market',
+	  	'empty_purchase',
+	  	'invalid_purchase_key',
+	  	'purchase_key_already_used'
+  	);
+
+	  $shake_error_codes = array_merge( $extras, $shake_error_codes );
+	  return $shake_error_codes;
+	}
+
+
+	public function addMarket( Markets\QueryMarket $market )
 	{
+		$name = $market->getMarketName();
 		$this->markets[ $name ] = $market;
 	}
 
@@ -47,7 +66,7 @@ class Register {
 			}
 
 			if( !$purchaseKey ){
-				$errors->add( 'empty-purchase', __( '<strong>Error</strong>: Empty Purchase Code.', 'marketcheck' ) );
+				$errors->add( 'empty_purchase', __( '<strong>Error</strong>: Empty Purchase Code.', 'marketcheck' ) );
 			}
 		}
 
@@ -73,6 +92,7 @@ class Register {
 		$this->showMarketSelector();
 		?>
 		<input type="hidden" name="purchase-key" value="<?php echo $this->getPurchaseKey(); ?>" />
+		<input type="hidden" name="market-selector" value="<?php echo $this->getSelectedMarket(); ?>" />
 		<input type="hidden" name="marketcheck-submitted" value="2" />
 		<?php
 	}
@@ -87,7 +107,7 @@ class Register {
 		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 ){
 			$errors->remove('empty_username');
 			$errors->remove('empty_email');
-			$errors->add('foo', __( 'Please fill the register form', 'marketcheck' ) );
+			$errors->add('fill-register-form', __( 'Please fill the register form', 'marketcheck' ) );
 		}
 
 		return $errors;
@@ -96,9 +116,8 @@ class Register {
 
 	public function register( $userID )
 	{
-		$purchaseKey    = $this->getPurchaseKey();
-		$this->getCurrentMarket()->setPurchaseKey( $purchaseKey );
-		$this->getCurrentMarket()->addUser( $userID );
+		$this->getCurrentMarket()->setPurchaseKey( $this->getPurchaseKey() );
+		$this->userManagement->addUser( $userID, $this->getCurrentMarket()->getProduct() );
 	}
 
 
@@ -152,7 +171,7 @@ class Register {
 		$selectMarketplaceText = __( 'Select Marketplace', 'marketcheck' );
 		$help = array();
 
-		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 && $selectedMarket ){
+		if( $this->getPostVar( 'marketcheck-submitted' ) && $selectedMarket ){
 			?>
 				<input type="hidden" name="market-selector" value="<?php echo $selectedMarket; ?>" />
 			<?php

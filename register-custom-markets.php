@@ -1,7 +1,11 @@
 <?php
 
-add_action( 'marketcheck/register-market', function( $fields, $settings, $registerForm ){
-	new \MarketCheck\Markets\Envato\Settings();
-	$envato = new \MarketCheck\Markets\Envato\QueryMarket( $settings );
-	$registerForm->addMarket( "Envato", $envato );
-}, 10, 3 );
+namespace MarketCheck\Markets;
+
+add_action( 'marketcheck/register-market', function( $fields, $settings, $registerForm, $db ){
+	new Envato\Settings();
+	$registerForm->addMarket( new Envato\QueryMarket( $settings, $db ) );
+
+	new Mojo\Settings();
+	$registerForm->addMarket( new Mojo\QueryMarket( $settings, $db ) );
+}, 10, 4 );
