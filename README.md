@@ -1,11 +1,10 @@
-## AQUA VERIFIER
-
-* Author:		Syamil MJ
-* Author URI:	[Aquagraphite.com](http://aquagraphite.com)
+## MarketCheck
+* Author:		Ionuț Staicu
+* Author URI:	[ionutstaicu.com](http://ionutstaicu.com)
 
 ### Overview
 
-Aqua Verifier is a simple WordPress plugin that modifies the default user registration page by adding a verification form using the [Envato Market API](http://themeforest.net/help/api).
+MarketCheck is a simple WordPress plugin that modifies the default user registration page by adding a verification form using the [Envato Market API](http://themeforest.net/help/api).
 
 Coupled with BBPress plugin, this will allow you to easily create your own Support Forum while still having all the default functionalities of the registration form that everyone is already familiar with.
 
@@ -14,30 +13,32 @@ Because we make good use of PHP namespaces, your server should support at least 
 
 ### License
 
-Aqua Verifier is released under GPLv3 - [http://www.gnu.org/copyleft/gpl.html](http://www.gnu.org/copyleft/gpl.html). You are free to redistribute & modify the plugin in either free or commercial products. Please kindly keep all links & credits intact.
-
-### Demo
-
-See [Aquagraphite Support Forum](http://support.aquagraphite.com/)
+MarketCheck is released under GPLv3 - [http://www.gnu.org/copyleft/gpl.html](http://www.gnu.org/copyleft/gpl.html). You are free to redistribute & modify the plugin in either free or commercial products. Please kindly keep all links & credits intact.
 
 ### User Guide
 
 1. Download, unzip, and rename folder to "aqua-verifier"
 2. Go to **Settings > General** and make the checkbox for `Anyone can register` is checked
-3. Go to **Settings > Aqua Verifier** and fill in all the required fields
+3. Go to **Settings > MarketCheck** and fill in all the required fields
 
-### Donations
+### Extensibility guide
+In order to add a new market, you need to follow three simple..ish steps:
 
-<a href="https://www.wfp.org/donate/fillthecup?icn=homepage-donate-cup&ici=small-button-link"><img src="https://www.wfp.org/sites/default/files/640x300_donation-form.jpg"/></a>
+1. Implement `QueryMarket` methods (for getting the URL and normalizing return values)
+2. Implement `MarketSettings` methods (for registering new settings fields)
+3. Register the new market (inside of `register-custom-markets.php` file):
 
-With your support, the World Food Programme is fighting hunger every day, whether we’re saving lives in an emergency or nourishing the bodies and minds of children by providing school meals.
+```
+add_action( 'marketcheck/register-market', function( $fields, $settings, $registerForm ){
+	new \MarketCheck\Markets\Envato\Settings();
+	$envato = new \MarketCheck\Markets\Envato\QueryMarket( $settings );
+	$registerForm->addMarket( "Envato", $envato );
+}, 10, 3 );
 
-It takes just one dollar to fill four cups with nutritious meals. Working together, we can build a world without hunger.
+```
 
-**<a href="https://www.wfp.org/donate/fillthecup?icn=homepage-donate-cup&ici=small-button-link">FILL THE CUP!</a>**
+(you can take a look inside of `includes/MarketCheck/Markets` folder in order to see how we added first market)
 
 ### Bugs, Issues, Feedbacks, Help?
 
-Please report any bugs, issues, feedbacks or get help on the Aqua Verifier's Issues page on Github - [Issues page](https://github.com/sy4mil/Aqua-Verifier/issues).
-
-If you need general help that can't possibly be answered on the Issues page, please contact me directly via this [contact form](http://aquagraphite.com/about).
+Please report any bugs, issues, feedbacks or get help on the MarketCheck's Issues page on Github - [Issues page](https://github.com/sy4mil/Aqua-Verifier/issues).

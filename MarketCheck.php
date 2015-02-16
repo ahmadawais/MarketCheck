@@ -49,12 +49,8 @@ class MarketCheck {
 	}
 }
 
-
-add_action( 'marketcheck/register-market', function( $fields, $settings, $registerForm ){
-	new Markets\Envato\Settings();
-	$envato = new Markets\Envato\QueryMarket( $settings );
-	$registerForm->addMarket( "Envato", $envato );
-}, 10, 3 );
-
+if( file_exists( dirname( __FILE__ ) . '/register-custom-markets.php' ) ) {
+  include( dirname( __FILE__ ) . '/register-custom-markets.php' );
+}
 
 new MarketCheck;
