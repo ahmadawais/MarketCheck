@@ -49,21 +49,21 @@ class Settings {
 
 		$this->fields->addCheckbox( array(
 			"id"         => 'disable_username',
-			"title"      => __( 'Disable Username input', 'a10e_av' ),
+			"title"      => __( 'Disable Username input', 'marketcheck' ),
 			"section_id" => 'general_settings',
 			"namespace"  => $this->opts['namespace'],
 			"settings"   => $this->getSettings(),
-			"desc"       => __( 'Disable the username field and use only the purchase code', 'a10e_av' )
+			"desc"       => __( 'Disable the username field and use only the purchase code', 'marketcheck' )
 		) );
 
 
 		$this->fields->addCheckbox( array(
 			"id"         => 'enable_credits',
-			"title"      => __( 'Display "Powered By"', 'a10e_av' ),
+			"title"      => __( 'Display "Powered By"', 'marketcheck' ),
 			"section_id" => 'general_settings',
 			"namespace"  => $this->opts['namespace'],
 			"settings"   => $this->getSettings(),
-			"desc"       => __( 'Display small credit line to help others find the plugin', 'a10e_av' )
+			"desc"       => __( 'Display small credit line to help others find the plugin', 'marketcheck' )
 		) );
 	}
 
@@ -76,7 +76,7 @@ class Settings {
 		?>
 		<div class="wrap">
 			<div id="icon-options-general" class="icon32"></div>
-			<h2><?php _e( 'MarketCheck Settings', 'a10e_av' ); ?></h2>
+			<h2><?php _e( 'MarketCheck Settings', 'marketcheck' ); ?></h2>
 
 			<form action="options.php" method="post">
 			<?php

@@ -35,7 +35,7 @@ class Register {
 	public function checkPurchaseForm()
 	{
 		$errors = new \WP_Error;
-		$title  = __( 'Check Purchase Key', 'a10e_av' );
+		$title  = __( 'Check Purchase Key', 'marketcheck' );
 
 		$purchaseKey    = $this->getPurchaseKey();
 		$selectedMarket = $this->getSelectedMarket();
@@ -43,11 +43,11 @@ class Register {
 
 		if( $isSubmited ){
 			if( !$selectedMarket ){
-				$errors->add( 'invalid-market', __( '<strong>Error</strong>: Invalid Market Selected.', 'a10e_av' ) );
+				$errors->add( 'invalid-market', __( '<strong>Error</strong>: Invalid Market Selected.', 'marketcheck' ) );
 			}
 
 			if( !$purchaseKey ){
-				$errors->add( 'empty-purchase', __( '<strong>Error</strong>: Empty Purchase Code.', 'a10e_av' ) );
+				$errors->add( 'empty-purchase', __( '<strong>Error</strong>: Empty Purchase Code.', 'marketcheck' ) );
 			}
 		}
 
@@ -81,13 +81,13 @@ class Register {
 	public function errors( $errors, $userLogin, $userEmail )
 	{
 		if( !$this->getPurchaseKey() ){
-			$errors->add( 'invalid_purchase_key', __( '<strong>ERROR</strong>: Invalid Purchase Key.', 'a10e_av' ) );
+			$errors->add( 'invalid_purchase_key', __( '<strong>ERROR</strong>: Invalid Purchase Key.', 'marketcheck' ) );
 		}
 
 		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 ){
 			$errors->remove('empty_username');
 			$errors->remove('empty_email');
-			$errors->add('foo', __( 'Please fill the register form', 'a10e_av' ) );
+			$errors->add('foo', __( 'Please fill the register form', 'marketcheck' ) );
 		}
 
 		return $errors;
@@ -115,7 +115,7 @@ class Register {
 
 		<form name="registerform" id="registerform" method="post">
 			<p>
-				<label for="purchase-key"><?php _e( 'Purchase Key', 'a10e_av' ) ?><br />
+				<label for="purchase-key"><?php _e( 'Purchase Key', 'marketcheck' ) ?><br />
 					<input type="text"
 						name="purchase-key"
 						id="purchase-key"
@@ -137,7 +137,7 @@ class Register {
 					id="wp-submit"
 					class="button-primary"
 					style="float:none"
-					value="<?php esc_attr_e( 'Check Purchase Key', 'a10e_av' ); ?>"
+					value="<?php esc_attr_e( 'Check Purchase Key', 'marketcheck' ); ?>"
 					tabindex="100" />
 			</p>
 		</form>
@@ -149,7 +149,7 @@ class Register {
 	protected function showMarketSelector()
 	{
 		$selectedMarket = $this->getSelectedMarket();
-		$selectMarketplaceText = __( 'Select Marketplace', 'a10e_av' );
+		$selectMarketplaceText = __( 'Select Marketplace', 'marketcheck' );
 		$help = array();
 
 		if( $this->getPostVar( 'marketcheck-submitted' ) == 1 && $selectedMarket ){

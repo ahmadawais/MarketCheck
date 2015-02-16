@@ -126,7 +126,7 @@ class Fields {
 		// 	"section_id" => '',
 		// 	"namespace"       => $namespace,
 		// 	"settings"   => $settings,
-		// 	"desc"       => __('Case sensitive', 'a10e_av'),
+		// 	"desc"       => __('Case sensitive', 'marketcheck'),
 		// );
 		//
 		add_settings_field(

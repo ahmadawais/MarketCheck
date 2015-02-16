@@ -17,7 +17,7 @@ namespace MarketCheck;
 
 if ( !defined( 'ABSPATH' ) ) exit;
 
-load_plugin_textdomain( 'a10e_av', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
+load_plugin_textdomain( 'marketcheck', false, dirname( plugin_basename( __FILE__ ) ) . '/lang/' );
 
 require_once( 'vendor/autoload.php' );
 
