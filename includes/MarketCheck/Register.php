@@ -22,48 +22,34 @@ class Register {
 
 	public function checkPurchaseForm()
 	{
-		$errors = '';
-		$title = __( 'Check Purchase Key', 'a10e_av' );
-    login_header( $title, '<p class="message register">' . $title, $errors );
+		$errors = new \WP_Error;
+		$title  = __( 'Check Purchase Key', 'a10e_av' );
 
-    $purchaseKey = $this->getPurchaseKey();
-    $selectedMarket = $this->getSelectedMarket();
+		$purchaseKey    = $this->getPurchaseKey();
+		$selectedMarket = $this->getSelectedMarket();
+		$isSubmited     = $this->getPostVar( 'marketcheck-submitted' );
 
-    if( $selectedMarket && $purchaseKey ){
-    	$this->markets[ $selectedMarket ]->setPurchaseKey( $purchaseKey );
-    	$this->markets[ $selectedMarket ]->addPurchase();
-    }
-
-		?>
-		<style type="text/css" media="screen">
-			#login {
-				width:600px;
-				max-width:95%;
+		if( $isSubmited ){
+			if( !$selectedMarket ){
+				$errors->add('invalid-market', '<strong>Error</strong>: Empty Purchase Code');
 			}
-		</style>
 
-		<form name="registerform" id="registerform" method="post">
-		  <p>
-		    <label for="purchase-key"><?php _e( 'Purchase Key', 'a10e_av' ) ?><br />
-		    <input type="text" name="purchase-key" id="purchase-key" class="input" value="" size="20" tabindex="10" /></label>
-		  </p>
+			if( !$purchaseKey ){
+				$errors->add('empty-purchase', '<strong>Error</strong>: Empty Purchase Code');
+			}
+		}
 
-		  <?php $this->showMarketSelector() ?>
+	 	if( $isSubmited && $selectedMarket && $purchaseKey ) {
+			$this->markets[ $selectedMarket ]->setPurchaseKey( $purchaseKey );
+			$this->markets[ $selectedMarket ]->addPurchase();
+		}
 
-		  <br class="clear" />
+		if( $isSubmited && true ){
+			return;
+		}
 
-		  <p class="submit" style="text-align:center">
-		  	<input type="submit"
-		  		name="wp-submit"
-		  		id="wp-submit"
-		  		class="button-primary"
-		  		style="float:none"
-		  		value="<?php esc_attr_e( 'Check Purchase Key', 'a10e_av' ); ?>"
-		  		tabindex="100" />
-	  	</p>
-		</form>
-
-		<?php
+		login_header( $title, '<p class="message register">' . $title, $errors );
+		$this->showPreRegisterForm();
 		login_footer('purchase-key');
 		die();
 	}
@@ -93,6 +79,43 @@ class Register {
 	public function register( $userID )
 	{
 
+	}
+
+
+	protected function showPreRegisterForm()
+	{
+		?>
+
+		<style type="text/css" media="screen">
+			#login {
+				width:600px;
+				max-width:95%;
+			}
+		</style>
+
+		<form name="registerform" id="registerform" method="post">
+			<p>
+				<label for="purchase-key"><?php _e( 'Purchase Key', 'a10e_av' ) ?><br />
+				<input type="text" name="purchase-key" id="purchase-key" class="input" value="" size="20" tabindex="10" /></label>
+				<input type="hidden" name="marketcheck-submitted" value="1" /></label>
+			</p>
+
+			<?php $this->showMarketSelector() ?>
+
+			<br class="clear" />
+
+			<p class="submit" style="text-align:center">
+				<input type="submit"
+					name="wp-submit"
+					id="wp-submit"
+					class="button-primary"
+					style="float:none"
+					value="<?php esc_attr_e( 'Check Purchase Key', 'a10e_av' ); ?>"
+					tabindex="100" />
+			</p>
+		</form>
+
+		<?php
 	}
 
 
@@ -132,7 +155,7 @@ class Register {
 
 	protected function getPurchaseKey()
 	{
-	  return $this->getPostVar( 'purchase-key' );
+		return $this->getPostVar( 'purchase-key' );
 	}
 
 
